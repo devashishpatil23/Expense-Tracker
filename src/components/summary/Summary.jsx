@@ -1,7 +1,11 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import Form from "../add-transaction/Form";
+import ExpenseIncomeChart from "../chart/ExpenseIncomeChart";
+import { useContext } from "react";
+import { GlobalContext } from "../../context";
 
-function Summary({onClose, isOpen}) {
+function Summary({ onClose, isOpen, totalExpense, totalIncome }) {
+  const { allTransaction } = useContext(GlobalContext);
   return (
     <Box
       p="6"
@@ -30,11 +34,9 @@ function Summary({onClose, isOpen}) {
           flexDirection={"column"}
           alignItems={"center"}
           justifyContent={"space-evenly"}
-          ml={"-20"}
-          mr={"2"}
         >
           <Heading size={"md"} mb={"4"} color={"gray.600"}>
-            Blance is 100
+            {`Blance is ${totalIncome - totalExpense}`}
           </Heading>
           <Flex
             justifyContent={"space-evenly"}
@@ -46,7 +48,7 @@ function Summary({onClose, isOpen}) {
             borderColor={"gray.100"}
           >
             <Flex flexDirection={"column"}>
-              <Heading color={"gray.700"}>$100</Heading>
+              <Heading color={"gray.700"}>${totalIncome}</Heading>
               <Text color={"gray.600"}>Total Income</Text>
             </Flex>
           </Flex>
@@ -60,24 +62,26 @@ function Summary({onClose, isOpen}) {
             borderColor={"gray.100"}
           >
             <Flex flexDirection={"column"}>
-              <Heading color={"gray.700"}>$100</Heading>
+              <Heading color={"gray.700"}>${totalExpense}</Heading>
               <Text color={"gray.600"}>Total Expense</Text>
             </Flex>
           </Flex>
         </Flex>
-        <Box
-          flex={1}
-          mt={"10"}
-          ml={"-90px"}
-          mr={"5"}
-          width={"300px"}
-          height={"300px"}
-          display={"flex"}
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
-          <Heading>Chart</Heading>
-        </Box>
+        {allTransaction && allTransaction.length !== 0 ? (
+          <Box
+            flex={1}
+            mt={"10"}
+            width={"300px"}
+            height={"300px"}
+            display={"flex"}
+            alignItems={"center"}
+            justifyContent={"center"}
+          >
+            <Heading>
+              <ExpenseIncomeChart expense={totalExpense} income={totalIncome} />
+            </Heading>
+          </Box>
+        ) : null}
       </Flex>
       <Form onClose={onClose} isOpen={isOpen} />
     </Box>
